@@ -1,0 +1,89 @@
+--entrega de ejercicio blog
+
+CREATE TABLE "user_blogs" (
+  "id" serial PRIMARY KEY,
+  "name" varchar NOT NULL,
+  "email" varchar UNIQUE NOT NULL,
+  "password" varchar(8) NOT NULL
+);
+
+CREATE TABLE "posts" (
+  "id" serial PRIMARY KEY,
+  "title" varchar NOT NULL,
+  "description" text NOT NULL,
+  "user_id" int NOT NULL,
+  "created_at" timestamp DEFAULT 'now()',
+  "update_at" timestamp DEFAULT 'now()'
+);
+
+CREATE TABLE "comments" (
+  "id" serial PRIMARY KEY,
+  "contain" text NOT NULL,
+  "post_id" int NOT NULL,
+  "user_id" int NOT NULL,
+  "created_at" timestamp DEFAULT 'now()',
+  "update_at" timestamp DEFAULT 'now()'
+);
+
+ALTER TABLE "posts" ADD FOREIGN KEY ("user_id") REFERENCES "user_blogs" ("id");
+
+ALTER TABLE "comments" ADD FOREIGN KEY ("user_id") REFERENCES "user_blogs" ("id");
+
+ALTER TABLE "comments" ADD FOREIGN KEY ("post_id") REFERENCES "posts" ("id");
+
+--insertar datos de usuarios
+insert into user_blogs (
+name,
+email,
+"password"
+)values (
+'juan',
+'juandark@gmail.com',
+'juan1234'
+),(
+'sebas',
+'sebaslo6@gmail.com',
+'sebaslop'
+),(
+'aleja',
+'aleja22081@gmail.com',
+'alejur22'
+);
+
+--insertar datos de post
+insert into posts (
+title,
+description,
+user_id
+)values (
+'campeon colombia',
+'Hoy gana nuestra seleccion colombia contra mexico',
+1
+),(
+'campeon Mexico',
+'hoy gana nuestro mexico querido...arriba mexico',
+2
+),(
+'que tontos los hombres con el futbol',
+'alguien quiere pensar en los niños',
+3
+);
+
+--insertar datos de los comentarios
+insert into "comments"  (
+contain,
+post_id,
+user_id
+) values (
+'estan pendejos colombia gana',
+1,
+2
+),(
+' colombia gana...campeon colombia asi no les guste mexico',
+2,
+1
+),(
+'estan idiotas con el futbol, porque nadie piensa en los niños',
+2,
+3
+); 

@@ -1,0 +1,117 @@
+CREATE TABLE "users_ecoomerce" (
+  "id" serial PRIMARY KEY,
+  "first_name" varchar NOT NULL,
+  "last_name" varchar NOT NULL,
+  "email" varchar UNIQUE NOT NULL,
+  "password" varchar(8) NOT NULL
+);
+
+CREATE TABLE "products_ecoomerce" (
+  "id" serial PRIMARY KEY,
+  "title_product" varchar NOT NULL,
+  "description" text NOT NULL,
+  "img__url" varchar NOT NULL,
+  "price" varchar NOT NULL,
+  "is_active" boolean DEFAULT false,
+  "category_id" int NOT NULL,
+  "inventary_id" int NOT NULL,
+  "user_id" int NOT NULL,
+  "created_at" timestamp DEFAULT 'now()',
+  "deletes_at" timestamp DEFAULT 'now()',
+  "update_at" timestamp DEFAULT 'now()'
+);
+
+CREATE TABLE "cart_items" (
+  "id" serial PRIMARY KEY,
+  "cart_description" text NOT NULL,
+  "product_id" int,
+  "quantity" decimal NOT NULL,
+  "created_at" timestamp DEFAULT 'now()',
+  "update_at" timestamp DEFAULT 'now()'
+);
+
+CREATE TABLE "categories_ecoomerce" (
+  "id" serial PRIMARY KEY,
+  "name_categories" varchar NOT NULL,
+  "description_cat" text NOT NULL,
+  "created_at" timestamp DEFAULT 'now()',
+  "deletes_at" timestamp DEFAULT 'now()',
+  "update_at" timestamp DEFAULT 'now()'
+);
+
+CREATE TABLE "inventary" (
+  "id" serial PRIMARY KEY,
+  "quantity" decimal NOT NULL,
+  "created_at" timestamp DEFAULT 'now()',
+  "deletes_at" timestamp DEFAULT 'now()',
+  "update_at" timestamp DEFAULT 'now()'
+);
+
+CREATE TABLE "order_items" (
+  "id" serial PRIMARY KEY,
+  "product_id" int NOT NULL,
+  "order_id" int NOT NULL,
+  "order_description" varchar NOT NULL
+);
+
+CREATE TABLE "order_details" (
+  "id" serial PRIMARY KEY,
+  "user_id" int,
+  "payment_id" int,
+  "total" decimal,
+  "created_at" timestamp DEFAULT 'now()',
+  "update_at" timestamp DEFAULT 'now()'
+);
+
+CREATE TABLE "payment_user" (
+  "id" serial PRIMARY KEY,
+  "user_id" int NOT NULL,
+  "payment_type" varchar NOT NULL
+);
+
+CREATE TABLE "payment_details" (
+  "id" serial PRIMARY KEY,
+  "total" decimal NOT NULL,
+  "order_id" int,
+  "created_at" timestamp DEFAULT 'now()',
+  "update_at" timestamp DEFAULT 'now()'
+);
+
+CREATE TABLE "send_user" (
+  "id" serial PRIMARY KEY,
+  "user_id" int,
+  "country" varchar NOT NULL,
+  "address" varchar NOT NULL,
+  "city" varchar NOT NULL,
+  "telephone" varchar UNIQUE NOT NULL
+);
+
+CREATE TABLE "relation_up" (
+  "id" serial PRIMARY KEY,
+  "user_id" int,
+  "product_id" int
+);
+
+ALTER TABLE "products_ecoomerce" ADD FOREIGN KEY ("inventary_id") REFERENCES "inventary" ("id");
+
+ALTER TABLE "products_ecoomerce" ADD FOREIGN KEY ("category_id") REFERENCES "categories_ecoomerce" ("id");
+
+ALTER TABLE "order_details" ADD FOREIGN KEY ("user_id") REFERENCES "users_ecoomerce" ("id");
+
+ALTER TABLE "payment_user" ADD FOREIGN KEY ("user_id") REFERENCES "users_ecoomerce" ("id");
+
+ALTER TABLE "order_items" ADD FOREIGN KEY ("order_id") REFERENCES "order_details" ("id");
+
+ALTER TABLE "payment_details" ADD FOREIGN KEY ("order_id") REFERENCES "order_items" ("id");
+
+ALTER TABLE "send_user" ADD FOREIGN KEY ("id") REFERENCES "users_ecoomerce" ("id");
+
+ALTER TABLE "order_details" ADD FOREIGN KEY ("payment_id") REFERENCES "payment_details" ("id");
+
+ALTER TABLE "products_ecoomerce" ADD FOREIGN KEY ("user_id") REFERENCES "users_ecoomerce" ("id");
+
+ALTER TABLE "cart_items" ADD FOREIGN KEY ("product_id") REFERENCES "products_ecoomerce" ("id");
+
+ALTER TABLE "relation_up" ADD FOREIGN KEY ("user_id") REFERENCES "users_ecoomerce" ("id");
+
+ALTER TABLE "relation_up" ADD FOREIGN KEY ("product_id") REFERENCES "products_ecoomerce" ("id");
